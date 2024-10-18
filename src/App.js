@@ -1,23 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import './styles.css'; // Make sure the path is correct
+import Header from './components/Headerz'; 
+import Footer from './components/Footer';
+import DoctorProfile from './components/DoctorProfile';
+import AppointmentForm from './components/AppointmentForm';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <DoctorProfile />
+      <AppointmentForm />
+      <Footer />
     </div>
   );
 }
