@@ -2,26 +2,28 @@ import '../styles.css';
 import AWS from 'aws-sdk';
 
 function AppointmentForm() {
-  // AWS Configuration 
-  const identityPoolId = 'ap-south-1:dfdea2b4-e6c8-46fc-a3a5-caf3acc89266'; 
   const apiGatewayEndpoint = 'https://q8av6ipz52.execute-api.ap-south-1.amazonaws.com/formData'; 
 
   AWS.config.region = 'ap-south-1'; 
-  AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: identityPoolId,
-  });
 
-  const apigClient = new AWS.APIGateway({
-    apiVersion: '2015-07-09',
-    endpoint: apiGatewayEndpoint,
-  });
-
-  const handleSubmit = async (event) => { 
-    event.preventDefault(); 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
     try {
+      // Initialize credentials and wait for them to load
+      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: 'ap-south-1:dfdea2b4-e6c8-46fc-a3a5-caf3acc89266', // Replace with your actual Cognito Identity Pool ID
+      });
+      await AWS.config.credentials.getPromise();
+
+      // Initialize API Gateway client after credentials are loaded
+      const apigClient = new AWS.APIGateway({
+        apiVersion: '2015-07-09',
+        endpoint: apiGatewayEndpoint,
+      });
+
       const params = {
-        // If your API endpoint has any path parameters or query strings, add them here
+        // Add any path parameters or query strings if needed
       };
 
       const body = {
@@ -31,14 +33,19 @@ function AppointmentForm() {
         medicalHistory: document.getElementById('medicalHistory').value,
       };
 
-      const response = await apigClient.post(params, body); 
+      // Log the apigClient to check if it's initialized correctly
+      console.log('apigClient:', apigClient);
+
+      const response = await apigClient.post(params, body);
       const data = await response.json();
 
       if (response.status === 200) {
-        alert(data.message); 
-        event.target.reset();  
+        alert(data.message);
+        event.target.reset();
       } else {
-        alert(`Error: ${data.message || 'Failed to submit appointment request'}`); 
+        alert(
+          `Error: ${data.message || 'Failed to submit appointment request'}`,
+        );
       }
     } catch (error) {
       console.error('Error:', error);
@@ -46,10 +53,14 @@ function AppointmentForm() {
     }
   };
 
-  return ( 
+  return (
     <div className="appointment-container">
       <div className="appointment-form-section">
-        <form className="appointment-form" id="appointment-form" onSubmit={handleSubmit}> 
+        <form
+          className="appointment-form"
+          id="appointment-form"
+          onSubmit={handleSubmit}
+        >
           <h2>Book Your Appointment</h2>
           <div>
             <label htmlFor="name">Name:</label>

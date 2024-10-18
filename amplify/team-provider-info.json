@@ -10,6 +10,14 @@
       "StackName": "amplify-docappointment1-dev-45599",
       "StackId": "arn:aws:cloudformation:ap-south-1:539247471650:stack/amplify-docappointment1-dev-45599/1ef34150-8d60-11ef-abfe-0a261ffe4585",
       "AmplifyAppId": "d2ype34ifzkg01"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d2ype34ifzkg01",
+          "type": "cicd"
+        }
+      }
     }
   }
 }
