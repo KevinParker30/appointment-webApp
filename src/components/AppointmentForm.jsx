@@ -1,19 +1,16 @@
 import '../styles.css';
 import { useState, useEffect } from 'react';
-import { generateClient } from 'aws-amplify/api';
-import { configureAmplify, signInAsGuest } from '../services/authService';
+import { post } from 'aws-amplify/api';
+import { configureAmplify, getCredentials } from '../services/authService';
 
 function AppointmentForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const [apiClient, setApiClient] = useState(null);
 
   useEffect(() => {
     const initializeAuth = async () => {
       try {
         configureAmplify();
-        await signInAsGuest();
-        const client = generateClient();
-        setApiClient(client);
+        await getCredentials(); // This ensures we have valid credentials
       } catch (error) {
         console.error('Error initializing authentication:', error);
       }
@@ -27,10 +24,6 @@ function AppointmentForm() {
     setIsLoading(true);
 
     try {
-      if (!apiClient) {
-        throw new Error('API client not initialized');
-      }
-
       const body = {
         name: event.target.name.value,
         age: event.target.age.value,
@@ -38,9 +31,15 @@ function AppointmentForm() {
         medicalHistory: event.target.medicalHistory.value,
       };
 
-      const response = await apiClient.post('appointmentAPI', '/', { body });
-      console.log('API Response:', response);
+      const response = await post({
+        apiName: 'appointmentAPI',
+        path: '/',
+        options: {
+          body
+        }
+      });
 
+      console.log('API Response:', response);
       alert('Appointment booked successfully!');
       event.target.reset();
     } catch (error) {
