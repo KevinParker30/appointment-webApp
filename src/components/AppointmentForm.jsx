@@ -1,55 +1,53 @@
 import '../styles.css';
-import AWS from 'aws-sdk';
+import { useState, useEffect } from 'react';
+import { generateClient } from 'aws-amplify/api';
+import { configureAmplify, signInAsGuest } from '../services/authService';
 
 function AppointmentForm() {
-  const apiGatewayEndpoint = 'https://q8av6ipz52.execute-api.ap-south-1.amazonaws.com/formData'; 
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiClient, setApiClient] = useState(null);
 
-  AWS.config.region = 'ap-south-1'; 
+  useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        configureAmplify();
+        await signInAsGuest();
+        const client = generateClient();
+        setApiClient(client);
+      } catch (error) {
+        console.error('Error initializing authentication:', error);
+      }
+    };
+
+    initializeAuth();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
 
     try {
-      // Initialize credentials and wait for them to load
-      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: 'ap-south-1:dfdea2b4-e6c8-46fc-a3a5-caf3acc89266', // Replace with your actual Cognito Identity Pool ID
-      });
-      await AWS.config.credentials.getPromise();
-
-      // Initialize API Gateway client after credentials are loaded
-      const apigClient = new AWS.APIGateway({
-        apiVersion: '2015-07-09',
-        endpoint: apiGatewayEndpoint,
-      });
-
-      const params = {
-        // Add any path parameters or query strings if needed
-      };
+      if (!apiClient) {
+        throw new Error('API client not initialized');
+      }
 
       const body = {
-        name: document.getElementById('name').value,
-        age: document.getElementById('age').value,
-        phoneNumber: document.getElementById('phoneNumber').value,
-        medicalHistory: document.getElementById('medicalHistory').value,
+        name: event.target.name.value,
+        age: event.target.age.value,
+        phoneNumber: event.target.phoneNumber.value,
+        medicalHistory: event.target.medicalHistory.value,
       };
 
-      // Log the apigClient to check if it's initialized correctly
-      console.log('apigClient:', apigClient);
+      const response = await apiClient.post('appointmentAPI', '/', { body });
+      console.log('API Response:', response);
 
-      const response = await apigClient.post(params, body);
-      const data = await response.json();
-
-      if (response.status === 200) {
-        alert(data.message);
-        event.target.reset();
-      } else {
-        alert(
-          `Error: ${data.message || 'Failed to submit appointment request'}`,
-        );
-      }
+      alert('Appointment booked successfully!');
+      event.target.reset();
     } catch (error) {
       console.error('Error:', error);
       alert('An error occurred. Please try again later.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -78,7 +76,9 @@ function AppointmentForm() {
             <label htmlFor="medicalHistory">Medical History (optional):</label>
             <textarea id="medicalHistory"></textarea>
           </div>
-          <button type="submit">Book Appointment</button>
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? 'Booking...' : 'Book Appointment'}
+          </button>
         </form>
       </div>
     </div>
