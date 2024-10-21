@@ -1,23 +1,8 @@
 import '../styles.css';
-import { useState, useEffect } from 'react';
-import { post } from 'aws-amplify/api';
-import { configureAmplify, getCredentials } from '../services/authService';
+import { useState } from 'react';
 
 function AppointmentForm() {
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        configureAmplify();
-        await getCredentials(); // This ensures we have valid credentials
-      } catch (error) {
-        console.error('Error initializing authentication:', error);
-      }
-    };
-
-    initializeAuth();
-  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -31,15 +16,9 @@ function AppointmentForm() {
         medicalHistory: event.target.medicalHistory.value,
       };
 
-      const response = await post({
-        apiName: 'appointmentAPI',
-        path: '/',
-        options: {
-          body
-        }
-      });
+      // Replace this with your actual API call logic (e.g., using fetch)
+      console.log('Form submitted with data:', body); 
 
-      console.log('API Response:', response);
       alert('Appointment booked successfully!');
       event.target.reset();
     } catch (error) {
