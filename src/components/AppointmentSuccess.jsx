@@ -4,7 +4,7 @@ import { faPhone } from '@fortawesome/free-solid-svg-icons'; // Import icons
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 
 function AppointmentSuccess() {
-  const phoneNumber = '+917749968411'; // Replace with the actual phone number
+  const phoneNumber = '+918955372027'; // Replace with the actual phone number
 
   return (
     <div className="appointment-success-container">
@@ -18,7 +18,7 @@ function AppointmentSuccess() {
             Call Us
           </button>
         </a>
-        <a href={`https://wa.me/${phoneNumber}?text=Hello, I booked an appointment.`}>
+        <a href={`https://wa.me/${phoneNumber}?text=Hello, I booked an appointment with Dr. Purohit.`}>
            <button>
               <FontAwesomeIcon icon={faWhatsapp} /> {/* WhatsApp icon */}
               WhatsApp Us

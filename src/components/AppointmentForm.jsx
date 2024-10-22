@@ -1,8 +1,8 @@
 import '../styles.css';
-import { useState } from 'react';
+import { useState, forwardRef } from 'react'; // Import forwardRef
 import { useNavigate } from 'react-router-dom';
 
-function AppointmentForm() {
+const AppointmentForm = forwardRef((props, ref) => { // Use forwardRef to pass ref
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('+91 ');
@@ -99,7 +99,7 @@ function AppointmentForm() {
   };
 
   return (
-    <div className="appointment-container">
+    <div className="appointment-container" ref={ref}>
       <div className="appointment-form-section">
         <form className="appointment-form" id="appointment-form" onSubmit={handleSubmit}>
           <h2>Book Your Appointment</h2>
@@ -155,6 +155,6 @@ function AppointmentForm() {
       </div>
     </div>
   );
-}
+});
 
 export default AppointmentForm;
