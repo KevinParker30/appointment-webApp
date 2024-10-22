@@ -1,9 +1,22 @@
+// Header.js
 import React, { useState } from 'react';
 import '../styles.css';
-import { scrollToForm } from '../utils';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { scrollToForm } from '../utils'; // Assuming you have this utility function
 
 function Header() {
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleBookAppointmentClick = (e) => {
+    e.preventDefault();
+    if (location.pathname === '/') {
+      scrollToForm();
+    } else {
+      navigate('/', { state: { scrollToForm: true } });
+    }
+  };
 
   return (
     <header className="header">
@@ -24,15 +37,14 @@ function Header() {
             <li><a href="/about">About Us</a></li>
             <li><a href="/contact">Contact</a></li>
             <li className="nav-appointment-btn">
-            <a href="#appointment-form" onClick={(e) => {
-            e.preventDefault(); // Prevent the default jump
-           scrollToForm();    // Call your scroll function
-          }
-    } 
-    className="appointment-btn">
-    Book Appointment
-  </a>
-</li>
+              <a
+                href="#appointment-form"
+                onClick={handleBookAppointmentClick}
+                className="appointment-btn"
+              >
+                Book Appointment
+              </a>
+            </li>
           </ul>
         </nav>
       </div>

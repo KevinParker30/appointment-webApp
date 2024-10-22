@@ -1,18 +1,29 @@
 import React from 'react';
-import './styles.css'; // Make sure the path is correct
-import Header from './components/Headerz'; 
+import './styles.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Header from './components/Headerz';
 import Footer from './components/Footer';
 import DoctorProfile from './components/DoctorProfile';
 import AppointmentForm from './components/AppointmentForm';
+import AppointmentSuccess from './components/AppointmentSuccess'; // Import the new component
 
 function App() {
   return (
-    <div>
-      <Header />
-      <DoctorProfile />
-      <AppointmentForm />
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <div>
+        <Header />
+        <Routes>
+          <Route path="/" element={
+            <>
+              <DoctorProfile />
+              <AppointmentForm />
+            </>
+          } />
+          <Route path="/appointment-success" element={<AppointmentSuccess />} />
+        </Routes>
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
 
