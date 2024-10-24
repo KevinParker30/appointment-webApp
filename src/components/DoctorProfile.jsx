@@ -17,7 +17,7 @@ function DoctorProfile() {
         Dr. Purohit is dedicated to providing effective Ayurvedic care to her patients.
         </p>
         <button className="appointment-btn" onClick={scrollToForm}>
-         Book Phone consultation @ ₹100
+         Book Phone consultation @ ₹199
         </button>
       </div>
       <div className="doctor-image-container">
