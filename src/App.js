@@ -6,20 +6,36 @@ import Header from './components/Headerz';
 import Footer from './components/Footer';
 import DoctorProfile from './components/DoctorProfile';
 import AppointmentForm from './components/AppointmentForm';
-import AppointmentSuccess from './components/AppointmentSuccess'; // Import the new component
-import { scrollToForm } from './utils'; // Ensure you import the scroll function
+import AppointmentSuccess from './components/AppointmentSuccess';
+import { scrollToForm } from './utils';
 
 function App() {
   const location = useLocation();
 
   useEffect(() => {
-    // Check if we should scroll to the form
     if (location.state?.scrollToForm) {
       setTimeout(() => {
         scrollToForm();
-      }, 100); // Delay scrolling by 100ms
+      }, 100);
     }
   }, [location]);
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = "https://www.googletagmanager.com/gtag/js?id=AW-16752451562";
+    script.async = true;
+    document.head.appendChild(script);
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
+  useEffect(() => {
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){window.dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-16752451562');
+  }, []);
 
   return (
     <div>
